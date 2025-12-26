@@ -76,7 +76,7 @@ npm run preview
 
 ## 🎯 How to Use
 
-1. **Authentication** - Enter the access password (default: `testpassword`)
+1. **Authentication** - Enter the access password (default: `Walhalla`)
 2. **Configure World Settings** - Set world speed and base time parameters
 3. **Select Units** - Choose which units to use for scavenging
 4. **Choose Calculation Mode**:
