@@ -2,21 +2,25 @@ import React from 'react';
 import { CalculationResult } from '../types';
 import { Package, Timer, Users } from 'lucide-react';
 import { UNITS } from '../utils/unitData';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface Props {
   results: CalculationResult[];
 }
 
 const LevelCards: React.FC<Props> = ({ results }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-4 animate-fade-in">
       <h3 className="text-sm font-bold text-[#603000] dark:text-slate-400 uppercase tracking-wider ml-1">
-        Szczegóły poziomów
+        {t.levels.details}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {results.map((res) => {
           // Filter units that have count > 0 for this level
           const activeUnits = UNITS.filter(u => (res.unitBreakdown?.[u.id] || 0) > 0);
+          const levelName = t.levels.names[res.level.code as keyof typeof t.levels.names];
 
           return (
             <div 
@@ -39,7 +43,7 @@ const LevelCards: React.FC<Props> = ({ results }) => {
                         {Math.round(res.level.ratio * 100)}%
                       </span>
                     </div>
-                    <h4 className="font-bold text-[#301c06] dark:text-white text-lg">{res.level.name}</h4>
+                    <h4 className="font-bold text-[#301c06] dark:text-white text-lg">{levelName}</h4>
                   </div>
                 </div>
                 
@@ -47,14 +51,14 @@ const LevelCards: React.FC<Props> = ({ results }) => {
                   <div className="flex justify-between items-center text-sm p-2 bg-[#fff5da] dark:bg-slate-800/50 rounded-md border border-[#c1a264]/30 dark:border-none group-hover:bg-[#e7d8af] dark:group-hover:bg-slate-800 transition-colors">
                     <span className="text-[#603000] dark:text-slate-400 flex items-center gap-2">
                       <Package size={14} className="text-[#7d510f]/60 dark:text-slate-400" /> 
-                      Surowce
+                      {t.levels.resource}
                     </span>
                     <span className="font-bold text-[#402000] dark:text-slate-200">{res.loot.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm p-2 bg-[#fff5da] dark:bg-slate-800/50 rounded-md border border-[#c1a264]/30 dark:border-none group-hover:bg-[#e7d8af] dark:group-hover:bg-slate-800 transition-colors">
                     <span className="text-[#603000] dark:text-slate-400 flex items-center gap-2">
                       <Timer size={14} className="text-[#7d510f]/60 dark:text-slate-400" /> 
-                      Czas
+                      {t.levels.time}
                     </span>
                     <span className="font-bold text-[#402000] dark:text-slate-200">{res.durationFormatted}</span>
                   </div>
@@ -64,11 +68,11 @@ const LevelCards: React.FC<Props> = ({ results }) => {
                 {activeUnits.length > 0 && res.isEnabled && (
                     <div className="mt-auto pt-3 border-t border-[#c1a264]/50 dark:border-slate-800">
                          <span className="text-[10px] font-bold text-[#603000]/70 dark:text-slate-500 uppercase mb-2 block">
-                            Przypisane wojska
+                            {t.levels.assignedTroops}
                          </span>
                          <div className="grid grid-cols-4 gap-2">
                              {activeUnits.map(unit => (
-                                 <div key={unit.id} className="flex flex-col items-center p-1 bg-[#fff5da]/50 dark:bg-slate-800/30 rounded border border-[#c1a264]/20 dark:border-slate-700/50" title={unit.name}>
+                                 <div key={unit.id} className="flex flex-col items-center p-1 bg-[#fff5da]/50 dark:bg-slate-800/30 rounded border border-[#c1a264]/20 dark:border-slate-700/50" title={t.units[unit.id].name}>
                                      <img src={unit.image} alt={unit.name} className="w-5 h-5 object-contain mb-0.5" />
                                      <span className="text-[10px] font-bold text-[#301c06] dark:text-slate-300">
                                          {res.unitBreakdown[unit.id]}
@@ -81,12 +85,12 @@ const LevelCards: React.FC<Props> = ({ results }) => {
                 
                 {(!activeUnits.length || !res.isEnabled) && (
                     <div className="mt-auto pt-3 border-t border-[#c1a264]/50 dark:border-slate-800 text-center py-2">
-                        <span className="text-xs text-[#603000]/40 dark:text-slate-600 italic">Brak przypisanych wojsk</span>
+                        <span className="text-xs text-[#603000]/40 dark:text-slate-600 italic">{t.levels.noTroops}</span>
                     </div>
                 )}
 
                 <div className="mt-4 pt-3 border-t border-[#c1a264] dark:border-slate-800 flex justify-between items-center">
-                  <span className="text-xs text-[#603000]/70 dark:text-slate-400">Efektywność</span>
+                  <span className="text-xs text-[#603000]/70 dark:text-slate-400">{t.levels.efficiency}</span>
                   <span className="font-bold text-[#7d510f] dark:text-slate-400">
                     {Math.round(res.lootPerHour).toLocaleString()} / h
                   </span>

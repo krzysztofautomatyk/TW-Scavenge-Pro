@@ -9,12 +9,14 @@ import LevelCards from './components/LevelCards';
 import InfoSection from './components/InfoSection';
 import ThemeToggle from './components/ThemeToggle';
 import CalculationGuidePage from './components/CalculationGuidePage';
-import { LayoutDashboard, Info } from 'lucide-react';
+import { LayoutDashboard, Info, Languages } from 'lucide-react';
+import { useLanguage } from './utils/LanguageContext';
 
 type ViewState = 'calculator' | 'guide';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('calculator');
+  const { t, language, setLanguage } = useLanguage();
 
   const [inputs, setInputs] = useState<CalculatorInputs>({
     worldSpeed: 1.25,
@@ -24,10 +26,14 @@ const App: React.FC = () => {
     exponent: 0.45,
     calculationMode: 'normal',
     enabledLevels: [1, 2, 3, 4], // Default all enabled
-    army: { ...INITIAL_ARMY, axe: 10000 } // Default 10000 axes
+    army: { ...INITIAL_ARMY, axe: 10000, spear: 371 } // Default 10000 axes and 371 spears
   });
 
   const results = useMemo(() => calculateScavengeResults(inputs), [inputs]);
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'pl' ? 'en' : 'pl');
+  };
 
   // Conditional Rendering for Views
   if (currentView === 'guide') {
@@ -45,7 +51,7 @@ const App: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-[#301c06] dark:text-white leading-none tracking-tight drop-shadow-sm">TW Scavenge Pro</h1>
-              <span className="text-xs text-[#603000] dark:text-slate-400 font-bold opacity-80">Advanced Calculator</span>
+              <span className="text-xs text-[#603000] dark:text-slate-400 font-bold opacity-80">{t.header.subtitle}</span>
             </div>
           </div>
           
@@ -62,9 +68,22 @@ const App: React.FC = () => {
                          bg-[#e7d8af] text-[#603000] border border-[#7d510f]/30 hover:bg-[#dec893] hover:text-[#402000]
                          dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200
                          transition-colors focus:outline-none focus:ring-2 focus:ring-[#7d510f] dark:focus:ring-brand-500"
-              title="Kompendium wiedzy"
+              title={t.header.guideButton}
             >
               <Info size={20} />
+            </button>
+            
+            {/* Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg shadow-sm flex items-center justify-center gap-2
+                         bg-[#e7d8af] text-[#603000] border border-[#7d510f]/30 hover:bg-[#dec893] hover:text-[#402000]
+                         dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200
+                         transition-colors focus:outline-none focus:ring-2 focus:ring-[#7d510f] dark:focus:ring-brand-500"
+              title={language === 'pl' ? 'Switch to English' : 'Przełącz na Polski'}
+            >
+                <Languages size={18} />
+                <span className="font-bold text-xs leading-none pt-0.5">{language.toUpperCase()}</span>
             </button>
 
             <ThemeToggle />

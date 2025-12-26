@@ -4,6 +4,7 @@ import { UNITS } from '../utils/unitData';
 import { calculateTotalCapacity, calculateTotalUnits, SCAVENGE_LEVELS } from '../utils/scavengeMath';
 import { Settings, ChevronDown, ChevronUp, Minus, Plus, ShoppingBag, PieChart, Check } from 'lucide-react';
 import UnitTooltip from './UnitTooltip';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface Props {
   inputs: CalculatorInputs;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
+  const { t } = useLanguage();
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [hoveredUnit, setHoveredUnit] = useState<UnitDefinition | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -92,7 +94,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
               <div className="p-1.5 bg-[#7d510f]/10 dark:bg-brand-900/30 rounded-md text-[#7d510f] dark:text-brand-400">
                 <Settings size={18} />
               </div>
-              <span className="hidden sm:inline">Konfiguracja</span>
+              <span className="hidden sm:inline">{t.form.configuration}</span>
             </h2>
 
             <div className="hidden sm:block h-6 w-px bg-[#c1a264] dark:bg-slate-700"></div>
@@ -100,7 +102,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
             {/* World Speed Control */}
             <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-[#603000] dark:text-slate-400 uppercase">
-                    Prędkość
+                    {t.form.speed}
                 </span>
                 <div className="flex items-center bg-[#fff5da] dark:bg-slate-800 border border-[#c1a264] dark:border-slate-700 rounded-lg p-0.5 shadow-sm">
                     <button 
@@ -131,7 +133,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
             {/* Calculation Mode Selector */}
             <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-[#603000] dark:text-slate-400 uppercase hidden lg:inline">
-                    Kalkulacja
+                    {t.form.calculation}
                 </span>
                 <div className="relative">
                     <select
@@ -157,7 +159,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                         : 'bg-[#fff5da] border-[#c1a264] text-[#603000] hover:border-[#7d510f] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 shadow-sm'}
                 `}
             >
-                Więcej
+                {t.form.more}
                 {isAdvancedOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
         </div>
@@ -179,7 +181,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                  <div className="flex items-center gap-2 mb-0.5">
                     <ShoppingBag size={14} className="text-[#c1a264] dark:text-brand-400" />
                     <div className="text-[11px] font-bold text-[#e7d8af] dark:text-brand-400/80 uppercase tracking-widest">
-                        Łączna pojemność
+                        {t.form.totalCapacity}
                     </div>
                  </div>
                  
@@ -195,7 +197,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
         {isAdvancedOpen && (
             <div className="bg-[#e7d8af]/30 dark:bg-slate-800/40 rounded-xl p-4 border border-[#c1a264] dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in mb-6 shadow-inner">
                 <div>
-                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Czas Bazowy (s)</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">{t.form.baseTime}</label>
                     <input
                         type="number"
                         name="baseTime"
@@ -205,7 +207,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Max Czas (h)</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">{t.form.maxTime}</label>
                     <input
                         type="number"
                         name="maxTimeAway"
@@ -215,7 +217,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Mnożnik</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">{t.form.multiplier}</label>
                     <input
                         type="number"
                         name="multiplier"
@@ -225,7 +227,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Wykładnik</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">{t.form.exponent}</label>
                     <input
                         type="number"
                         name="exponent"
@@ -241,7 +243,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
         {/* BOTTOM: 1:1 Replica of TW Unit Input Table */}
         <div className="space-y-3">
             <h3 className="text-xs font-bold text-[#603000] dark:text-slate-500 uppercase tracking-wider pl-1">
-                Wybierz Wojska
+                {t.form.selectTroops}
             </h3>
             
             {/* TRIBAL WARS STYLED CONTAINER */}
@@ -275,7 +277,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                             ))}
                             {/* "All" Column */}
                             <td className="text-center p-1 align-bottom min-w-[60px] border-l border-[#c6b078]/50 dark:border-slate-700">
-                                <span className="text-[10px] font-bold text-[#603000] dark:text-slate-400 uppercase tracking-wide">Razem</span>
+                                <span className="text-[10px] font-bold text-[#603000] dark:text-slate-400 uppercase tracking-wide">{t.form.total}</span>
                             </td>
                         </tr>
 
@@ -317,12 +319,14 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                 <div className="mt-3 bg-[#e7d8af] dark:bg-slate-800/60 p-4 rounded-lg border border-[#c1a264] dark:border-slate-700 animate-fade-in shadow-inner">
                     <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#c1a264]/50 dark:border-slate-700/50">
                         <PieChart size={16} className="text-[#7d510f] dark:text-brand-400"/>
-                        <span className="text-xs font-bold text-[#603000] dark:text-slate-300 uppercase tracking-wide">Dystrybucja Wojsk</span>
+                        <span className="text-xs font-bold text-[#603000] dark:text-slate-300 uppercase tracking-wide">{t.form.distribution}</span>
                     </div>
                     
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {SCAVENGE_LEVELS.map(level => {
                             const isChecked = inputs.enabledLevels.includes(level.id);
+                            // Dynamic name from translations based on code (FF, BB...)
+                            const translatedName = t.levels.names[level.code as keyof typeof t.levels.names];
                             return (
                             <label 
                                 key={level.id} 
@@ -332,7 +336,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                                         ? 'bg-[#fff5da] border-[#7d510f] dark:bg-slate-700/50 dark:border-brand-500 shadow-sm' 
                                         : 'bg-transparent border-[#c1a264]/50 dark:border-slate-700 text-[#603000]/60 dark:text-slate-500 hover:bg-[#fff5da]/50 dark:hover:bg-slate-800'}
                                 `}
-                                title={level.name} // Full Polish name toolip
+                                title={translatedName} // Full translated name toolip
                             >
                                 <input 
                                     type="checkbox" 
@@ -356,19 +360,19 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                                     {Math.round(level.ratio * 100)}%
                                 </span>
                                 <span className="text-[9px] mt-1 opacity-70 truncate max-w-full">
-                                    {level.name}
+                                    {translatedName}
                                 </span>
                             </label>
                         )})}
                     </div>
                     <p className="text-[10px] mt-3 text-[#603000] dark:text-slate-400 italic bg-[#fff5da] dark:bg-slate-900/50 p-2 rounded border border-[#c1a264]/30 dark:border-slate-700/50">
-                        <span className="font-bold">Strategia Czasowa:</span> Wojska zostaną podzielone tak, aby czas trwania wypraw na wszystkich zaznaczonych poziomach był <strong>zbliżony</strong> (proporcjonalnie do trudności poziomu).
+                        <span className="font-bold">{t.form.distributionDesc}</span> {t.form.strategyTime}
                     </p>
                 </div>
             )}
 
             <p className="text-[10px] text-[#603000]/60 dark:text-slate-500 text-right italic">
-                *Interfejs stylizowany na oryginalny wygląd gry Plemiona
+                {t.form.disclaimer}
             </p>
         </div>
       </div>

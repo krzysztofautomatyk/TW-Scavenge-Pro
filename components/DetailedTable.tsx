@@ -1,6 +1,7 @@
 import React from 'react';
 import { CalculationResult, CalculationMode } from '../types';
 import { Database, Sigma } from 'lucide-react';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface Props {
   results: CalculationResult[];
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode }) => {
+  const { t } = useLanguage();
   // Baseline for comparison is generally the first option in normal mode
   // In split mode, comparison per row is less relevant, but we keep it for consistency or hide it
   const baselineProfit = results.length > 0 ? results[0].lootWithinMaxTime : 0;
@@ -29,10 +31,10 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
     <div className="bg-[#f4e4bc] dark:bg-slate-900 rounded-lg shadow-lg border-2 border-[#c1a264] dark:border-slate-800 overflow-hidden animate-fade-in">
         <div className="p-5 border-b border-[#c1a264] dark:border-slate-800 flex items-center gap-2 bg-[#e7d8af] dark:bg-transparent">
            <Database size={18} className="text-[#7d510f] dark:text-slate-400" />
-           <h3 className="font-bold text-[#301c06] dark:text-white">Pełne zestawienie danych</h3>
+           <h3 className="font-bold text-[#301c06] dark:text-white">{t.table.title}</h3>
            {calculationMode === 'split' && (
                 <span className="text-[10px] bg-[#7d510f] dark:bg-brand-600 text-[#f4e4bc] dark:text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-wide ml-auto">
-                    Split Mode
+                    {t.table.splitMode}
                 </span>
            )}
         </div>
@@ -40,33 +42,32 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
           <table className="w-full text-sm text-left border-collapse">
             <thead className="text-xs text-[#402000] dark:text-slate-400 uppercase bg-[#c1a264] dark:bg-slate-800/50 border-b border-[#7d510f] dark:border-slate-800">
               <tr>
-                <th className="px-4 py-4 font-bold tracking-wider text-[#301c06] dark:text-slate-200">Poziom</th>
-                <th className="px-4 py-4 font-bold tracking-wider text-right hidden lg:table-cell text-[#301c06] dark:text-slate-200">Jednostki</th>
-                <th className="px-4 py-4 font-bold tracking-wider text-right hidden xl:table-cell text-[#301c06] dark:text-slate-200">Pojemność</th>
-                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">Łup (1x)</th>
-                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">Czas (1x)</th>
+                <th className="px-4 py-4 font-bold tracking-wider text-[#301c06] dark:text-slate-200">{t.table.level}</th>
+                <th className="px-4 py-4 font-bold tracking-wider text-right hidden lg:table-cell text-[#301c06] dark:text-slate-200">{t.table.units}</th>
+                <th className="px-4 py-4 font-bold tracking-wider text-right hidden xl:table-cell text-[#301c06] dark:text-slate-200">{t.table.capacity}</th>
+                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">{t.table.loot}</th>
+                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">{t.table.time}</th>
                 
                 <th className="px-4 py-4 font-bold tracking-wider text-center border-l border-[#b0965b] dark:border-slate-700 text-[#301c06] dark:text-slate-200 bg-[#b8a069]/20 dark:bg-slate-800/30">
-                    Liczba wypraw
+                    {t.table.runs}
                 </th>
                 <th className="px-4 py-4 font-bold tracking-wider text-center border-r border-[#b0965b] dark:border-slate-700 text-[#301c06] dark:text-slate-200 bg-[#b8a069]/20 dark:bg-slate-800/30">
-                    Łączny czas
+                    {t.table.totalTime}
                 </th>
                 
                 <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">
-                    Zysk ({maxTimeAway}h)
+                    {t.table.profit} ({maxTimeAway}h)
                 </th>
                 
                 <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">
-                    Porównanie
+                    {t.table.comparison}
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#c1a264]/30 dark:divide-slate-800">
               {results.map((res, index) => {
                 const isBaseline = index === 0;
-                // Comparison in split mode is weird per row, usually we compare Total Split vs Best Single, 
-                // but keeping simple percentage logic here for now, or hiding it if 0 capacity
+                const levelName = t.levels.names[res.level.code as keyof typeof t.levels.names];
                 
                 let diffFormatted = "-";
                 let diffColorClass = "";
@@ -104,7 +105,7 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
                             </span>
                          </div>
                          <span className="font-bold text-[#402000] dark:text-white text-sm">
-                             {res.level.name}
+                             {levelName}
                          </span>
                      </div>
                   </td>
@@ -136,7 +137,7 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
                 <tr>
                     <td className="px-4 py-4 font-black flex items-center gap-2">
                         <Sigma size={16} className="text-[#c1a264] dark:text-brand-400" />
-                        RAZEM
+                        {t.table.total}
                     </td>
                     <td className="px-4 py-4 text-right font-bold hidden lg:table-cell opacity-80">{totalUnits.toLocaleString()}</td>
                     <td className="px-4 py-4 text-right font-bold hidden xl:table-cell opacity-80">{totalCapacity.toLocaleString()}</td>
@@ -149,7 +150,7 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
                     </td>
                     
                     <td colSpan={2} className="px-4 py-4 text-center text-xs opacity-60 italic">
-                        {calculationMode === 'split' ? 'Podsumowanie strategii łączonej' : 'Suma (teoretyczna przy wysłaniu wszystkiego)'}
+                        {calculationMode === 'split' ? t.table.summarySplit : t.table.summaryNormal}
                     </td>
 
                     <td className="px-4 py-4 text-right font-black text-lg text-white dark:text-brand-400 tracking-tight">
