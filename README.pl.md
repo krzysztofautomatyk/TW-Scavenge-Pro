@@ -76,7 +76,7 @@ npm run preview
 
 ## 🎯 Jak Używać
 
-1. **Uwierzytelnienie** - Wprowadź hasło dostępu (domyślnie: `testpassword`)
+1. **Uwierzytelnienie** - Wprowadź hasło dostępu (domyślnie: `Walhalla`)
 2. **Skonfiguruj Ustawienia Świata** - Ustaw prędkość świata i parametry czasu bazowego
 3. **Wybierz Jednostki** - Określ, które jednostki mają być użyte do zbieractwa
 4. **Wybierz Tryb Obliczeń**:
