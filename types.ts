@@ -1,3 +1,4 @@
+
 export interface ScavengeLevel {
   id: number;
   name: string;
@@ -56,6 +57,7 @@ export interface CalculatorInputs {
   maxTimeAway: number; // hours
   multiplier: number;
   exponent: number;
+  setupTime: number; // seconds (time to send expedition)
   calculationMode: CalculationMode;
   enabledLevels: number[]; // Array of Level IDs (1-4) enabled for split calculation
   army: Record<UnitType, number>; // Counts for each unit type

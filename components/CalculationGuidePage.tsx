@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Calculator, Clock, PieChart, Users, Zap, BookOpen, Divide, Sigma, Target } from 'lucide-react';
+import { ArrowLeft, Calculator, Clock, PieChart, Users, Zap, BookOpen, Divide, Sigma, Target, Book, Layers, MousePointer, Gauge } from 'lucide-react';
 import { UNITS } from '../utils/unitData';
 import { useLanguage } from '../utils/LanguageContext';
 
@@ -45,6 +45,130 @@ const CalculationGuidePage: React.FC<Props> = ({ onBack }) => {
                 {t.guide.heroDesc}
             </p>
         </div>
+
+        {/* NEW SECTION: GLOSSARY OF TERMS */}
+        <section className="space-y-6">
+            <div className="flex items-center gap-3 border-b-2 border-[#c1a264] dark:border-slate-800 pb-2">
+                <div className="p-2 bg-[#7d510f] dark:bg-brand-600 rounded text-white">
+                    <Book size={24} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#301c06] dark:text-white">{t.guide.glossaryTitle}</h3>
+                  <p className="text-sm text-[#603000] dark:text-slate-400">{t.guide.glossarySubtitle}</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Speed */}
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-[#c1a264] dark:border-slate-800 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Gauge size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        <h4 className="font-bold text-[#301c06] dark:text-white">{t.guide.termSpeed}</h4>
+                    </div>
+                    <p className="text-sm text-[#402000] dark:text-slate-300 leading-relaxed flex-1">
+                        {t.guide.descSpeed}
+                    </p>
+                </div>
+
+                {/* Setup Time */}
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-[#c1a264] dark:border-slate-800 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                        <MousePointer size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        <h4 className="font-bold text-[#301c06] dark:text-white">{t.guide.termSetup}</h4>
+                    </div>
+                    <p className="text-sm text-[#402000] dark:text-slate-300 leading-relaxed flex-1">
+                        {t.guide.descSetup}
+                    </p>
+                </div>
+
+                {/* Base Time */}
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-[#c1a264] dark:border-slate-800 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Clock size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        <h4 className="font-bold text-[#301c06] dark:text-white">{t.guide.termBaseTime}</h4>
+                    </div>
+                    <p className="text-sm text-[#402000] dark:text-slate-300 leading-relaxed flex-1">
+                        {t.guide.descBaseTime}
+                    </p>
+                </div>
+
+                {/* Split Mode */}
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border-2 border-[#7d510f]/20 dark:border-brand-500/20 shadow-sm flex flex-col relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-[#7d510f]/5 dark:bg-brand-500/5 rounded-bl-full"></div>
+                    <div className="flex items-center gap-2 mb-3 relative z-10">
+                        <PieChart size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        <h4 className="font-bold text-[#301c06] dark:text-white">{t.guide.termSplit}</h4>
+                    </div>
+                    <p className="text-sm text-[#402000] dark:text-slate-300 leading-relaxed flex-1 relative z-10">
+                        {t.guide.descSplit}
+                    </p>
+                </div>
+
+                {/* Normal Mode */}
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-[#c1a264] dark:border-slate-800 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Zap size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        <h4 className="font-bold text-[#301c06] dark:text-white">{t.guide.termNormal}</h4>
+                    </div>
+                    <p className="text-sm text-[#402000] dark:text-slate-300 leading-relaxed flex-1">
+                        {t.guide.descNormal}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {/* NEW SECTION: MODES DEEP DIVE */}
+        <section className="space-y-6">
+            <div className="flex items-center gap-3 border-b-2 border-[#c1a264] dark:border-slate-800 pb-2">
+                <div className="p-2 bg-[#7d510f] dark:bg-brand-600 rounded text-white">
+                    <Layers size={24} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#301c06] dark:text-white">{t.guide.modesTitle}</h3>
+                  <p className="text-sm text-[#603000] dark:text-slate-400">{t.guide.modesSubtitle}</p>
+                </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+                {/* Normal Mode Card */}
+                <div className="bg-[#fff5da] dark:bg-slate-900 rounded-xl p-6 border-2 border-[#c1a264] dark:border-slate-700">
+                    <h4 className="text-xl font-black text-[#301c06] dark:text-white mb-2 flex items-center gap-2">
+                        <Zap size={20} className="text-[#7d510f] dark:text-brand-500" />
+                        {t.guide.modeNormalTitle}
+                    </h4>
+                    <p className="text-[#402000] dark:text-slate-300 mb-4 min-h-[48px]">
+                        {t.guide.modeNormalDesc}
+                    </p>
+                    <div className="bg-white dark:bg-slate-950 p-4 rounded-lg border border-[#c1a264]/50 dark:border-slate-800">
+                        <span className="text-xs font-bold text-[#7d510f] dark:text-brand-400 uppercase tracking-wider block mb-1">
+                            STRATEGIA
+                        </span>
+                        <p className="text-sm text-[#603000] dark:text-slate-400">
+                            {t.guide.modeNormalUse}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Split Mode Card */}
+                <div className="bg-[#301c06] dark:bg-slate-800 text-[#f4e4bc] dark:text-slate-100 rounded-xl p-6 border-2 border-[#7d510f] dark:border-brand-600 shadow-lg">
+                    <h4 className="text-xl font-black text-white dark:text-white mb-2 flex items-center gap-2">
+                        <PieChart size={20} className="text-[#c1a264] dark:text-brand-400" />
+                        {t.guide.modeSplitTitle}
+                    </h4>
+                    <p className="text-[#e7d8af] dark:text-slate-300 mb-4 min-h-[48px]">
+                        {t.guide.modeSplitDesc}
+                    </p>
+                    <div className="bg-[#402000] dark:bg-slate-900 p-4 rounded-lg border border-[#7d510f] dark:border-slate-700">
+                        <span className="text-xs font-bold text-[#c1a264] dark:text-brand-400 uppercase tracking-wider block mb-1">
+                            STRATEGIA
+                        </span>
+                        <p className="text-sm text-[#d2c09e] dark:text-slate-400">
+                            {t.guide.modeSplitUse}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         {/* SECTION 1: MIXED TROOPS */}
         <section className="space-y-6">
@@ -113,7 +237,7 @@ const CalculationGuidePage: React.FC<Props> = ({ onBack }) => {
                 Duration = ( ( (Capacity * Ratio)^2 * Multiplier )^Exponent + BaseTime ) * WorldSpeedFactor
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-4 bg-[#fff5da] dark:bg-slate-800 rounded border border-[#c1a264] dark:border-slate-700">
                     <strong className="block text-[#7d510f] dark:text-brand-400 mb-1">{t.guide.sec2Param1}</strong>
                     <p className="text-xs text-[#402000] dark:text-slate-300">
@@ -130,6 +254,16 @@ const CalculationGuidePage: React.FC<Props> = ({ onBack }) => {
                     <strong className="block text-[#7d510f] dark:text-brand-400 mb-1">{t.guide.sec2Param3}</strong>
                     <p className="text-xs text-[#402000] dark:text-slate-300">
                         {t.guide.sec2Param3Desc}
+                    </p>
+                </div>
+                {/* SETUP TIME CARD */}
+                <div className="p-4 bg-[#e7d8af] dark:bg-brand-900/20 rounded border border-[#7d510f] dark:border-brand-500 shadow-sm relative">
+                    <div className="absolute top-2 right-2 opacity-10">
+                        <Clock size={32} />
+                    </div>
+                    <strong className="block text-[#301c06] dark:text-white mb-1">{t.guide.sec2SetupTitle}</strong>
+                    <p className="text-xs text-[#402000] dark:text-slate-300 font-medium">
+                        {t.guide.sec2SetupDesc}
                     </p>
                 </div>
             </div>

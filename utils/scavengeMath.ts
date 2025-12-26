@@ -27,7 +27,7 @@ export function calculateTotalUnits(army: Record<UnitType, number>): number {
 }
 
 export function calculateScavengeResults(inputs: CalculatorInputs): CalculationResult[] {
-  const { worldSpeed, baseTime, multiplier, exponent, army, maxTimeAway, calculationMode, enabledLevels } = inputs;
+  const { worldSpeed, baseTime, multiplier, exponent, army, maxTimeAway, calculationMode, enabledLevels, setupTime } = inputs;
   
   const totalCapacityRaw = calculateTotalCapacity(army);
   const totalUnitsRaw = calculateTotalUnits(army);
@@ -92,9 +92,10 @@ export function calculateScavengeResults(inputs: CalculatorInputs): CalculationR
         loot = Math.round(currentLevelCapacity * level.ratio);
     }
     
-    // Avoid division by zero for rates
-    const effectiveDuration = Math.max(1, durationSeconds);
+    // Effective Duration includes the setup time (send delay)
+    const effectiveDuration = Math.max(1, durationSeconds + setupTime);
     
+    // Calculations for Rates use Effective Duration
     const runsPerDay = durationSeconds > 0 ? Math.floor(86400 / effectiveDuration) : 0;
     const lootPerHour = durationSeconds > 0 ? (loot / effectiveDuration) * 3600 : 0;
     const resourcesPer24h = loot * runsPerDay;

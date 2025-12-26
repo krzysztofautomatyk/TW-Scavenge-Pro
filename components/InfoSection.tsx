@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Info, HelpCircle } from 'lucide-react';
+import { BookOpen, Info, HelpCircle, TrendingUp, AlertTriangle, Moon, Sun, Sword, Star } from 'lucide-react';
 import { useLanguage } from '../utils/LanguageContext';
 
 const InfoSection: React.FC = () => {
@@ -21,7 +21,8 @@ const InfoSection: React.FC = () => {
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+      {/* SECTION 1: LEVELS & MATH (GRID) */}
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
         {/* Left Column: Levels */}
         <div>
           <h4 className="flex items-center gap-2 text-sm font-bold text-[#402000] dark:text-white uppercase tracking-wider mb-4 border-b border-[#c1a264] dark:border-slate-800 pb-2">
@@ -76,54 +77,121 @@ const InfoSection: React.FC = () => {
           </ul>
         </div>
         
-        {/* Right Column: Methodology */}
+        {/* Right Column: Math & Mechanics */}
         <div>
           <h4 className="flex items-center gap-2 text-sm font-bold text-[#402000] dark:text-white uppercase tracking-wider mb-4 border-b border-[#c1a264] dark:border-slate-800 pb-2">
             <HelpCircle size={16} className="text-[#7d510f] dark:text-brand-500" /> 
-            {t.info.methodTitle}
+            {t.info.mathTitle}
           </h4>
           <div className="space-y-6">
-            <div className="flex gap-4">
-                <div className="mt-1 shrink-0">
-                    <div className="w-6 h-6 rounded-full bg-[#fff5da] dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-[#7d510f] dark:text-slate-400 border border-[#c1a264] dark:border-slate-700">1</div>
-                </div>
-                <div>
-                    <h5 className="text-sm font-bold text-[#301c06] dark:text-slate-100 mb-1">{t.info.method1Title}</h5>
-                    <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed">
-                        {t.info.method1Desc}
-                    </p>
-                </div>
-            </div>
-            
-            <div className="flex gap-4">
-                <div className="mt-1 shrink-0">
-                    <div className="w-6 h-6 rounded-full bg-[#fff5da] dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-[#7d510f] dark:text-slate-400 border border-[#c1a264] dark:border-slate-700">2</div>
-                </div>
-                <div>
-                    <h5 className="text-sm font-bold text-[#301c06] dark:text-slate-100 mb-1">{t.info.method2Title}</h5>
-                    <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed">
-                        {t.info.method2Desc} <br/>
-                        <code className="text-[11px] bg-[#fff5da] dark:bg-slate-800 px-1.5 py-0.5 rounded border border-[#c1a264] dark:border-slate-700 font-mono mt-1 inline-block text-[#402000] dark:text-slate-300">
-                            ((Capacity * %) ^ Exponent + BaseTime) * SpeedFactor
-                        </code>
-                    </p>
-                </div>
-            </div>
+             <div className="bg-[#fff5da] dark:bg-slate-800 p-4 rounded-lg border border-[#c1a264]/50 dark:border-slate-700">
+                <p className="text-sm text-[#603000] dark:text-slate-300 leading-relaxed font-medium">
+                    {t.info.mathIntro}
+                </p>
+             </div>
 
-            <div className="flex gap-4">
-                <div className="mt-1 shrink-0">
-                    <div className="w-6 h-6 rounded-full bg-[#fff5da] dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-[#7d510f] dark:text-slate-400 border border-[#c1a264] dark:border-slate-700">3</div>
+             <div>
+                <div className="flex items-center gap-2 mb-2 text-[#b91c1c] dark:text-red-400">
+                    <AlertTriangle size={16} />
+                    <h5 className="text-sm font-bold uppercase">{t.info.mathDiminishingTitle}</h5>
                 </div>
-                <div>
-                    <h5 className="text-sm font-bold text-[#301c06] dark:text-slate-100 mb-1">{t.info.method3Title}</h5>
-                    <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed">
-                        {t.info.method3Desc}
-                    </p>
-                </div>
-            </div>
+                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-6 border-l-2 border-[#b91c1c]/30 dark:border-red-500/30">
+                    {t.info.mathDiminishingDesc}
+                </p>
+             </div>
           </div>
         </div>
       </div>
+
+      {/* SECTION 2: EXAMPLES (CARDS) */}
+      <div className="mb-12">
+          <h4 className="flex items-center gap-2 text-sm font-bold text-[#402000] dark:text-white uppercase tracking-wider mb-6 border-b border-[#c1a264] dark:border-slate-800 pb-2">
+            <TrendingUp size={16} className="text-[#7d510f] dark:text-brand-500" /> 
+            {t.info.examplesTitle}
+          </h4>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+              {/* Example 1: Active */}
+              <div className="bg-[#fff5da] dark:bg-slate-800 rounded-lg p-5 border border-[#c1a264] dark:border-slate-700 shadow-sm flex flex-col">
+                  <div className="flex items-center gap-2 mb-3">
+                      <div className="bg-[#e7d8af] dark:bg-slate-700 p-1.5 rounded text-[#7d510f] dark:text-brand-400">
+                         <Sun size={18} />
+                      </div>
+                      <h5 className="font-bold text-[#301c06] dark:text-white text-sm">{t.info.example1Title}</h5>
+                  </div>
+                  <p className="text-xs text-[#603000] dark:text-slate-400 mb-3 italic">
+                      {t.info.example1Desc}
+                  </p>
+                  <div className="mt-auto bg-[#f4e4bc] dark:bg-slate-900/50 p-3 rounded border border-[#c1a264]/50 dark:border-slate-700/50">
+                      <span className="text-[10px] font-bold text-[#7d510f] dark:text-brand-500 uppercase tracking-wider block mb-1">STRATEGIA</span>
+                      <p className="text-xs text-[#402000] dark:text-slate-300 leading-snug">
+                          {t.info.example1Strategy}
+                      </p>
+                  </div>
+              </div>
+
+              {/* Example 2: Sleep */}
+              <div className="bg-[#fff5da] dark:bg-slate-800 rounded-lg p-5 border border-[#c1a264] dark:border-slate-700 shadow-sm flex flex-col">
+                  <div className="flex items-center gap-2 mb-3">
+                      <div className="bg-[#301c06] dark:bg-slate-950 p-1.5 rounded text-[#f4e4bc] dark:text-slate-300">
+                         <Moon size={18} />
+                      </div>
+                      <h5 className="font-bold text-[#301c06] dark:text-white text-sm">{t.info.example2Title}</h5>
+                  </div>
+                  <p className="text-xs text-[#603000] dark:text-slate-400 mb-3 italic">
+                      {t.info.example2Desc}
+                  </p>
+                  <div className="mt-auto bg-[#f4e4bc] dark:bg-slate-900/50 p-3 rounded border border-[#c1a264]/50 dark:border-slate-700/50">
+                      <span className="text-[10px] font-bold text-[#7d510f] dark:text-brand-500 uppercase tracking-wider block mb-1">STRATEGIA</span>
+                      <p className="text-xs text-[#402000] dark:text-slate-300 leading-snug">
+                          {t.info.example2Strategy}
+                      </p>
+                  </div>
+              </div>
+
+              {/* Example 3: Offensive */}
+              <div className="bg-[#fff5da] dark:bg-slate-800 rounded-lg p-5 border border-[#c1a264] dark:border-slate-700 shadow-sm flex flex-col">
+                  <div className="flex items-center gap-2 mb-3">
+                      <div className="bg-[#b91c1c] dark:bg-red-900 p-1.5 rounded text-white">
+                         <Sword size={18} />
+                      </div>
+                      <h5 className="font-bold text-[#301c06] dark:text-white text-sm">{t.info.example3Title}</h5>
+                  </div>
+                  <p className="text-xs text-[#603000] dark:text-slate-400 mb-3 italic">
+                      {t.info.example3Desc}
+                  </p>
+                  <div className="mt-auto bg-[#f4e4bc] dark:bg-slate-900/50 p-3 rounded border border-[#c1a264]/50 dark:border-slate-700/50">
+                      <span className="text-[10px] font-bold text-[#7d510f] dark:text-brand-500 uppercase tracking-wider block mb-1">STRATEGIA</span>
+                      <p className="text-xs text-[#402000] dark:text-slate-300 leading-snug">
+                          {t.info.example3Strategy}
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      {/* SECTION 3: PRO TIPS */}
+      <div>
+          <h4 className="flex items-center gap-2 text-sm font-bold text-[#402000] dark:text-white uppercase tracking-wider mb-4 border-b border-[#c1a264] dark:border-slate-800 pb-2">
+            <Star size={16} className="text-[#7d510f] dark:text-brand-500" /> 
+            {t.info.tipsTitle}
+          </h4>
+          <ul className="grid md:grid-cols-2 gap-4">
+              <li className="flex gap-3 items-start">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#7d510f] dark:bg-brand-500 mt-2 shrink-0"></div>
+                  <p className="text-sm text-[#603000] dark:text-slate-300 leading-relaxed">{t.info.tip1}</p>
+              </li>
+               <li className="flex gap-3 items-start">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#7d510f] dark:bg-brand-500 mt-2 shrink-0"></div>
+                  <p className="text-sm text-[#603000] dark:text-slate-300 leading-relaxed">{t.info.tip2}</p>
+              </li>
+               <li className="flex gap-3 items-start md:col-span-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#7d510f] dark:bg-brand-500 mt-2 shrink-0"></div>
+                  <p className="text-sm text-[#603000] dark:text-slate-300 leading-relaxed">{t.info.tip3}</p>
+              </li>
+          </ul>
+      </div>
+
     </div>
   );
 };

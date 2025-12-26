@@ -1,16 +1,18 @@
 import React from 'react';
-import { CalculationResult, CalculationMode } from '../types';
-import { Database, Sigma } from 'lucide-react';
+import { CalculationResult, CalculationMode, CalculatorInputs } from '../types';
+import { Database, Sigma, Clock, Minus, Plus } from 'lucide-react';
 import { useLanguage } from '../utils/LanguageContext';
 
 interface Props {
   results: CalculationResult[];
   maxTimeAway: number;
   calculationMode: CalculationMode;
+  setupTime: number;
+  setInputs: React.Dispatch<React.SetStateAction<CalculatorInputs>>;
 }
 
-const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode }) => {
-  const { t } = useLanguage();
+const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode, setupTime, setInputs }) => {
+  const { t, language } = useLanguage();
   // Baseline for comparison is generally the first option in normal mode
   // In split mode, comparison per row is less relevant, but we keep it for consistency or hide it
   const baselineProfit = results.length > 0 ? results[0].lootWithinMaxTime : 0;
@@ -27,16 +29,76 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
     .reduce((prev, curr) => (curr.durationSeconds > prev.durationSeconds ? curr : prev), results[0])
     ?.durationFormatted || "00:00:00";
 
+  const handleSetupTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    setInputs(prev => ({ ...prev, setupTime: isNaN(val) ? 0 : Math.max(0, val) }));
+  };
+
+  const adjustSetupTime = (delta: number) => {
+    setInputs(prev => ({ ...prev, setupTime: Math.max(0, prev.setupTime + delta) }));
+  };
+
+  const setupLabel = language === 'pl' ? 's wysyłka' : 's setup';
+
+  // Common Input Style for consistency (Matches CalculatorForm)
+  const controlContainerClass = "flex items-center bg-[#fff5da] dark:bg-slate-800 border border-[#c1a264] dark:border-slate-600 rounded-lg p-0.5 shadow-sm h-9";
+  const controlBtnClass = "w-7 h-full flex items-center justify-center hover:bg-[#e7d8af] dark:hover:bg-slate-700 rounded text-[#402000] dark:text-slate-400 transition-colors";
+
   return (
     <div className="bg-[#f4e4bc] dark:bg-slate-900 rounded-lg shadow-lg border-2 border-[#c1a264] dark:border-slate-800 overflow-hidden animate-fade-in">
-        <div className="p-5 border-b border-[#c1a264] dark:border-slate-800 flex items-center gap-2 bg-[#e7d8af] dark:bg-transparent">
-           <Database size={18} className="text-[#7d510f] dark:text-slate-400" />
-           <h3 className="font-bold text-[#301c06] dark:text-white">{t.table.title}</h3>
-           {calculationMode === 'split' && (
-                <span className="text-[10px] bg-[#7d510f] dark:bg-brand-600 text-[#f4e4bc] dark:text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-wide ml-auto">
-                    {t.table.splitMode}
+        <div className="p-4 border-b border-[#c1a264] dark:border-slate-800 flex flex-wrap items-center gap-4 bg-[#e7d8af] dark:bg-slate-900/50">
+           <div className="flex items-center gap-2">
+               <Database size={18} className="text-[#7d510f] dark:text-brand-500" />
+               <h3 className="font-bold text-[#301c06] dark:text-white text-lg">{t.table.title}</h3>
+           </div>
+
+           <div className="hidden md:block h-6 w-px bg-[#c1a264] dark:bg-slate-700 mx-1"></div>
+
+           {/* Enhanced Editable Setup Time Control with Buttons - STYLED EXACTLY LIKE SPEED INPUT */}
+           <div className="flex items-center gap-2">
+                <div className={controlContainerClass}>
+                    <div className="flex items-center justify-center px-2 mr-1 border-r border-[#c1a264]/30 dark:border-slate-700/50 h-full">
+                         <Clock size={14} className="text-[#7d510f] dark:text-slate-400" />
+                    </div>
+
+                    <button 
+                        onClick={() => adjustSetupTime(-1)}
+                        className={controlBtnClass}
+                        title="-1s"
+                    >
+                        <Minus size={12} strokeWidth={3} />
+                    </button>
+                    
+                    <input 
+                        type="number" 
+                        min="0"
+                        max="99999"
+                        value={setupTime}
+                        onChange={handleSetupTimeChange}
+                        className="w-14 text-center font-mono font-bold text-sm text-[#402000] dark:text-white bg-transparent border-none focus:ring-0 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    
+                    <button 
+                        onClick={() => adjustSetupTime(1)}
+                        className={controlBtnClass}
+                        title="+1s"
+                    >
+                        <Plus size={12} strokeWidth={3} />
+                    </button>
+                </div>
+                
+                <span className="text-xs font-bold text-[#603000] dark:text-slate-400 uppercase tracking-wide">
+                   {setupLabel}
                 </span>
-           )}
+           </div>
+
+           <span className={`text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-wide ml-auto border ${
+               calculationMode === 'split' 
+               ? 'bg-[#7d510f] border-[#7d510f] text-[#f4e4bc] dark:bg-brand-600 dark:border-brand-500 dark:text-white' 
+               : 'bg-[#596a77] border-[#4a5b67] text-white dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200'
+           }`}>
+               {calculationMode === 'split' ? t.table.splitMode : t.table.normalMode}
+           </span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left border-collapse">
@@ -46,7 +108,10 @@ const DetailedTable: React.FC<Props> = ({ results, maxTimeAway, calculationMode 
                 <th className="px-4 py-4 font-bold tracking-wider text-right hidden lg:table-cell text-[#301c06] dark:text-slate-200">{t.table.units}</th>
                 <th className="px-4 py-4 font-bold tracking-wider text-right hidden xl:table-cell text-[#301c06] dark:text-slate-200">{t.table.capacity}</th>
                 <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">{t.table.loot}</th>
-                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">{t.table.time}</th>
+                
+                <th className="px-4 py-4 font-bold tracking-wider text-right text-[#301c06] dark:text-slate-200">
+                    {t.table.time}
+                </th>
                 
                 <th className="px-4 py-4 font-bold tracking-wider text-center border-l border-[#b0965b] dark:border-slate-700 text-[#301c06] dark:text-slate-200 bg-[#b8a069]/20 dark:bg-slate-800/30">
                     {t.table.runs}

@@ -53,7 +53,8 @@
     </script>
     <script>
       // Prevent FOUC (Flash of Unstyled Content)
-      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      // DEFAULT TO LIGHT MODE. Only use dark if explicitly stored in localStorage.
+      if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');

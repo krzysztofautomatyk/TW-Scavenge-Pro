@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { CalculatorInputs } from './types';
 import { calculateScavengeResults } from './utils/scavengeMath';
 import { INITIAL_ARMY } from './utils/unitData';
@@ -6,10 +6,10 @@ import CalculatorForm from './components/CalculatorForm';
 import ResultsDashboard from './components/ResultsDashboard';
 import DetailedTable from './components/DetailedTable';
 import LevelCards from './components/LevelCards';
-import InfoSection from './components/InfoSection';
 import ThemeToggle from './components/ThemeToggle';
 import CalculationGuidePage from './components/CalculationGuidePage';
-import { LayoutDashboard, Info, Languages } from 'lucide-react';
+import PasswordProtection from './components/PasswordProtection';
+import { LayoutDashboard, Info, Languages, ExternalLink } from 'lucide-react';
 import { useLanguage } from './utils/LanguageContext';
 
 type ViewState = 'calculator' | 'guide';
@@ -17,6 +17,15 @@ type ViewState = 'calculator' | 'guide';
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('calculator');
   const { t, language, setLanguage } = useLanguage();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication status on mount (optimization for flicker)
+  useEffect(() => {
+    const isUnlocked = localStorage.getItem('tw_auth_unlocked');
+    if (isUnlocked === 'true') {
+        setIsAuthenticated(true);
+    }
+  }, []);
 
   const [inputs, setInputs] = useState<CalculatorInputs>({
     worldSpeed: 1.25,
@@ -24,9 +33,10 @@ const App: React.FC = () => {
     maxTimeAway: 24,
     multiplier: 100,
     exponent: 0.45,
+    setupTime: 60, // Default 60 seconds setup time per mission
     calculationMode: 'normal',
     enabledLevels: [1, 2, 3, 4], // Default all enabled
-    army: { ...INITIAL_ARMY, axe: 10000, spear: 371 } // Default 10000 axes and 371 spears
+    army: { ...INITIAL_ARMY, spear: 359 } // Default 359 spears
   });
 
   const results = useMemo(() => calculateScavengeResults(inputs), [inputs]);
@@ -35,13 +45,19 @@ const App: React.FC = () => {
     setLanguage(language === 'pl' ? 'en' : 'pl');
   };
 
-  // Conditional Rendering for Views
+  // 1. Password Protection Check
+  if (!isAuthenticated) {
+     return <PasswordProtection onUnlock={() => setIsAuthenticated(true)} />;
+  }
+
+  // 2. Guide View Check
   if (currentView === 'guide') {
     return <CalculationGuidePage onBack={() => setCurrentView('calculator')} />;
   }
 
+  // 3. Main App Render
   return (
-    <div className="min-h-screen bg-[#d2c09e] dark:bg-slate-950 transition-colors duration-300 pb-20 font-sans">
+    <div className="min-h-screen bg-[#d2c09e] dark:bg-slate-950 transition-colors duration-300 pb-8 font-sans flex flex-col">
       {/* Header */}
       <header className="bg-[#c1a264] border-b-4 border-[#7d510f] dark:bg-slate-900/80 dark:backdrop-blur-md dark:border-slate-800 sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -92,7 +108,7 @@ const App: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in flex-grow">
         
         {/* 1. Configuration (Full Width) */}
         <div className="w-full">
@@ -106,20 +122,42 @@ const App: React.FC = () => {
 
         {/* 3. Detailed Table (Full Width) */}
         <div className="w-full">
-            <DetailedTable results={results} maxTimeAway={inputs.maxTimeAway} calculationMode={inputs.calculationMode} />
+            <DetailedTable 
+                results={results} 
+                maxTimeAway={inputs.maxTimeAway} 
+                calculationMode={inputs.calculationMode}
+                setupTime={inputs.setupTime}
+                setInputs={setInputs}
+            />
         </div>
         
-        {/* 4. Info Section (Full Width) */}
-        <div className="w-full">
-            <InfoSection />
-        </div>
-
-        {/* 5. Recommendation & Analysis (50% / 50%) */}
+        {/* 4. Recommendation & Analysis (50% / 50%) */}
         <div className="w-full">
             <ResultsDashboard results={results} />
         </div>
 
       </main>
+
+      {/* Footer */}
+      <footer className="w-full py-6 mt-8 border-t border-[#7d510f]/10 dark:border-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p className="text-sm font-bold text-[#301c06] dark:text-slate-400">
+                {t.footer.copyright}
+            </p>
+            <p className="text-xs text-[#603000]/70 dark:text-slate-500 flex items-center justify-center gap-1">
+                {t.footer.inspiration}
+                <a 
+                    href="https://daniel.dmvandenberg.nl/scripting-tribal-wars/tribal-wars-scavenge-calculator/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-0.5 hover:text-[#7d510f] dark:hover:text-brand-400 hover:underline transition-colors"
+                >
+                    Daniel van den Berg
+                    <ExternalLink size={10} />
+                </a>
+            </p>
+        </div>
+      </footer>
     </div>
   );
 };

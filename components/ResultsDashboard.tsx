@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { CalculationResult } from '../types';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { TrendingUp, Wallet, Clock } from 'lucide-react';
 import { useLanguage } from '../utils/LanguageContext';
 
@@ -13,7 +13,7 @@ const ResultsDashboard: React.FC<Props> = ({ results }) => {
   const [isDark, setIsDark] = useState(false);
 
   // Custom Tooltip Component wrapped to access `t`
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-[#fff5da] dark:bg-slate-800 border-2 border-[#c1a264] dark:border-slate-700 p-3 rounded-lg shadow-xl z-50">
