@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CalculatorInputs, UnitType, UnitDefinition } from '../types';
 import { UNITS } from '../utils/unitData';
 import { calculateTotalCapacity, calculateTotalUnits } from '../utils/scavengeMath';
-import { Settings, ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react';
+import { Settings, ChevronDown, ChevronUp, Minus, Plus, ShoppingBag } from 'lucide-react';
 import UnitTooltip from './UnitTooltip';
 
 interface Props {
@@ -121,13 +121,28 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
             </button>
         </div>
 
-        {/* Right Side: Capacity Highlight */}
+        {/* Right Side: Capacity Highlight - HIGH VISIBILITY VERSION */}
         <div className="flex items-center justify-end">
-            <div className="bg-[#fff5da] dark:bg-amber-900/10 border border-[#c1a264] dark:border-amber-800/50 px-5 py-2 rounded-xl flex flex-col items-end shadow-sm">
-                 <div className="text-[10px] font-bold text-[#603000]/80 dark:text-amber-500/80 uppercase tracking-wider mb-0.5">
-                    Łączna pojemność
+            <div className="
+                relative overflow-hidden
+                bg-gradient-to-br from-[#7d510f] via-[#5c2e08] to-[#3d1e04] 
+                dark:from-slate-800 dark:to-slate-900 
+                border-[3px] border-[#c1a264] dark:border-brand-500/50 
+                px-6 py-2.5 rounded-lg flex flex-col items-end 
+                shadow-[0_4px_12px_rgba(0,0,0,0.3)] dark:shadow-lg
+                group
+            ">
+                 {/* Decorative background glow for light mode */}
+                 <div className="absolute -left-4 -top-4 w-12 h-12 bg-[#c1a264] rounded-full blur-xl opacity-20 dark:opacity-0 pointer-events-none"></div>
+                 
+                 <div className="flex items-center gap-2 mb-0.5">
+                    <ShoppingBag size={14} className="text-[#c1a264] dark:text-brand-400" />
+                    <div className="text-[11px] font-bold text-[#e7d8af] dark:text-brand-400/80 uppercase tracking-widest">
+                        Łączna pojemność
+                    </div>
                  </div>
-                 <div className="text-2xl font-black text-[#402000] dark:text-amber-500 leading-none tabular-nums">
+                 
+                 <div className="text-3xl font-black text-white dark:text-brand-400 leading-none tabular-nums drop-shadow-md tracking-tight">
                     {totalCapacity.toLocaleString()}
                  </div>
             </div>

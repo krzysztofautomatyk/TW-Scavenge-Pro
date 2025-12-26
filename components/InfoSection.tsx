@@ -1,11 +1,11 @@
 import React from 'react';
-import { BookOpen, Info, HelpCircle, ArrowRight } from 'lucide-react';
+import { BookOpen, Info, HelpCircle } from 'lucide-react';
 
 const InfoSection: React.FC = () => {
   return (
     <div className="bg-[#f4e4bc] dark:bg-slate-900 rounded-lg shadow-md border-2 border-[#c1a264] dark:border-slate-800 p-6 md:p-8 transition-colors duration-300">
       <div className="flex items-start md:items-center gap-4 mb-8">
-        <div className="p-3 bg-[#e7d8af] dark:bg-brand-900/20 rounded-lg text-[#7d510f] dark:text-brand-400 ring-1 ring-[#c1a264] dark:ring-brand-900/40">
+        <div className="p-3 bg-[#e7d8af] dark:bg-slate-800 rounded-lg text-[#7d510f] dark:text-brand-400 ring-1 ring-[#c1a264] dark:ring-slate-700">
           <BookOpen size={24} />
         </div>
         <div>
@@ -28,45 +28,45 @@ const InfoSection: React.FC = () => {
           <ul className="space-y-4">
             <li className="group">
                 <div className="flex items-baseline justify-between mb-1">
-                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-900/50">
+                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-500/30">
                         FF (10%)
                     </span>
                     <span className="text-xs font-semibold text-[#402000] dark:text-slate-100">Leniwi szabrownicy</span>
                 </div>
-                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-800 transition-colors">
+                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-500 transition-colors">
                     Najkrótsze wyprawy. Idealne do szybkiego obrotu wojskami przy częstej aktywności na koncie.
                 </p>
             </li>
             <li className="group">
                 <div className="flex items-baseline justify-between mb-1">
-                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-900/50">
+                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-500/30">
                         BB (25%)
                     </span>
                     <span className="text-xs font-semibold text-[#402000] dark:text-slate-100">Skromni zbieracze</span>
                 </div>
-                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-800 transition-colors">
+                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-500 transition-colors">
                     Zbalansowany poziom. Kompromis między czasem trwania a zyskiem dla średnio-aktywnych graczy.
                 </p>
             </li>
             <li className="group">
                 <div className="flex items-baseline justify-between mb-1">
-                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-900/50">
+                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-500/30">
                         SS (50%)
                     </span>
                     <span className="text-xs font-semibold text-[#402000] dark:text-slate-100">Sprytni zbieracze</span>
                 </div>
-                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-800 transition-colors">
+                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-500 transition-colors">
                     Wysoka efektywność. Często najlepszy wybór pod kątem surowców na godzinę w dłuższym oknie czasowym.
                 </p>
             </li>
             <li className="group">
                 <div className="flex items-baseline justify-between mb-1">
-                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-900/50">
+                    <span className="font-mono text-xs font-bold text-[#301c06] dark:text-brand-300 bg-[#e7d8af] dark:bg-brand-900/30 px-2 py-0.5 rounded border border-[#c1a264] dark:border-brand-500/30">
                         RR (75%)
                     </span>
                     <span className="text-xs font-semibold text-[#402000] dark:text-slate-100">Wielcy zbieracze</span>
                 </div>
-                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-800 transition-colors">
+                <p className="text-sm text-[#603000] dark:text-slate-400 leading-relaxed pl-1 border-l-2 border-[#c1a264]/50 dark:border-slate-800 group-hover:border-[#7d510f] dark:group-hover:border-brand-500 transition-colors">
                     Maksymalny jednorazowy łup. Najlepsze rozwiązanie na noc lub dłuższą nieobecność (AFK).
                 </p>
             </li>
