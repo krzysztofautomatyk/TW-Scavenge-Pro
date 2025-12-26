@@ -26,7 +26,10 @@ const ThemeToggle: React.FC = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="p-2 rounded-lg shadow-sm
+                 bg-[#e7d8af] text-[#603000] border border-[#7d510f]/30 hover:bg-[#dec893] hover:text-[#402000]
+                 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200
+                 transition-colors focus:outline-none focus:ring-2 focus:ring-[#7d510f] dark:focus:ring-brand-500"
       aria-label="Przełącz tryb ciemny"
     >
       {isDark ? <Sun size={20} /> : <Moon size={20} />}

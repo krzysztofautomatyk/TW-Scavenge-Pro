@@ -16,7 +16,18 @@
               sans: ['Inter', 'sans-serif'],
             },
             colors: {
-              // Professional Banking/Enterprise Palette
+              // Tribal Wars Palette (High Fidelity)
+              tribal: {
+                bg: '#d2c09e',        // Map background
+                parchment: '#f4e4bc', // Main container background
+                light: '#fff5da',     // Lighter highlight
+                gold: '#c1a264',      // Borders/Headers
+                wood: '#7d510f',      // Dark borders
+                text: '#402000',      // Main text
+                dark: '#301c06',      // Darker text
+                link: '#603000',      // Links/Accents
+              },
+              // Professional Banking/Enterprise Palette (Dark Mode)
               slate: {
                 850: '#1e293b',
                 900: '#0f172a',
@@ -60,7 +71,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300">
+  <body class="bg-tribal-bg text-tribal-dark dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300">
     <div id="root"></div>
   </body>
 </html>

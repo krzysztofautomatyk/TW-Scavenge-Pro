@@ -23,25 +23,25 @@ const App: React.FC = () => {
   const results = useMemo(() => calculateScavengeResults(inputs), [inputs]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 pb-20">
+    <div className="min-h-screen bg-[#d2c09e] dark:bg-slate-950 transition-colors duration-300 pb-20 font-sans">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+      <header className="bg-[#c1a264] border-b-4 border-[#7d510f] dark:bg-slate-900/80 dark:backdrop-blur-md dark:border-slate-800 sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-br from-brand-500 to-brand-700 p-2 rounded-xl text-white shadow-lg shadow-brand-500/30">
+            <div className="bg-[#7d510f] dark:bg-gradient-to-br dark:from-brand-500 dark:to-brand-700 p-2 rounded-lg text-[#f4e4bc] dark:text-white shadow-inner border border-[#f4e4bc]/30 dark:border-none">
               <LayoutDashboard size={22} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 dark:text-white leading-none tracking-tight">TW Scavenge Pro</h1>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Advanced Calculator</span>
+              <h1 className="text-xl font-bold text-[#301c06] dark:text-white leading-none tracking-tight drop-shadow-sm">TW Scavenge Pro</h1>
+              <span className="text-xs text-[#603000] dark:text-slate-400 font-bold opacity-80">Advanced Calculator</span>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
-             <div className="hidden sm:block text-xs font-mono font-medium text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+             <div className="hidden sm:block text-xs font-mono font-bold text-[#603000] dark:text-slate-500 bg-[#e7d8af] dark:bg-slate-800 px-3 py-1.5 rounded-md border border-[#7d510f]/30 dark:border-slate-700 shadow-sm">
               v1.2.0
             </div>
-            <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
+            <div className="h-6 w-px bg-[#7d510f]/30 dark:bg-slate-700 hidden sm:block"></div>
             <ThemeToggle />
           </div>
         </div>

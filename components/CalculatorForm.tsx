@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { CalculatorInputs, UnitType } from '../types';
+import { CalculatorInputs, UnitType, UnitDefinition } from '../types';
 import { UNITS } from '../utils/unitData';
 import { calculateTotalCapacity, calculateTotalUnits } from '../utils/scavengeMath';
 import { Settings, ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react';
+import UnitTooltip from './UnitTooltip';
 
 interface Props {
   inputs: CalculatorInputs;
@@ -11,6 +12,8 @@ interface Props {
 
 const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [hoveredUnit, setHoveredUnit] = useState<UnitDefinition | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,33 +41,49 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
     }));
   };
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (hoveredUnit) {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    }
+  };
+
   const totalCapacity = calculateTotalCapacity(inputs.army);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors duration-300">
+    <div 
+      className="bg-[#f4e4bc] dark:bg-slate-900 rounded-lg shadow-md border-2 border-[#c1a264] dark:border-slate-800 overflow-hidden transition-colors duration-300 relative"
+      onMouseMove={handleMouseMove}
+    >
+       {/* Corner decorations for light mode could go here, but keeping it clean for 'banking' feel */}
+
+      {/* Custom Tooltip Portal/Overlay */}
+      {hoveredUnit && (
+        <UnitTooltip unit={hoveredUnit} position={mousePos} />
+      )}
+
       {/* Header with Integrated Controls */}
-      <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 border-b border-[#c1a264] dark:border-slate-800 bg-[#e7d8af]/50 dark:bg-slate-900/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         {/* Left Side: Title & Controls */}
         <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <h2 className="font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-              <div className="p-1.5 bg-brand-100 dark:bg-brand-900/30 rounded-md text-brand-600 dark:text-brand-400">
+            <h2 className="font-semibold text-[#402000] dark:text-white flex items-center gap-2">
+              <div className="p-1.5 bg-[#7d510f]/10 dark:bg-brand-900/30 rounded-md text-[#7d510f] dark:text-brand-400">
                 <Settings size={18} />
               </div>
               <span className="hidden sm:inline">Konfiguracja</span>
             </h2>
 
-            <div className="hidden sm:block h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+            <div className="hidden sm:block h-6 w-px bg-[#c1a264] dark:bg-slate-700"></div>
 
             {/* World Speed Control */}
             <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
+                <span className="text-xs font-bold text-[#603000] dark:text-slate-400 uppercase">
                     Prędkość
                 </span>
-                <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 shadow-sm">
+                <div className="flex items-center bg-[#fff5da] dark:bg-slate-800 border border-[#c1a264] dark:border-slate-700 rounded-lg p-0.5 shadow-sm">
                     <button 
                         onClick={() => adjustSpeed(-0.05)}
-                        className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-500 dark:text-slate-400 transition-colors"
+                        className="p-1 hover:bg-[#e7d8af] dark:hover:bg-slate-700 rounded text-[#402000] dark:text-slate-400 transition-colors"
                         title="-0.05"
                     >
                         <Minus size={14} />
@@ -75,11 +94,11 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                         value={inputs.worldSpeed}
                         onChange={handleInputChange}
                         step="0.05"
-                        className="w-14 text-center text-sm font-bold text-slate-800 dark:text-white bg-transparent border-none focus:ring-0 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-14 text-center text-sm font-bold text-[#402000] dark:text-white bg-transparent border-none focus:ring-0 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <button 
                         onClick={() => adjustSpeed(0.05)}
-                        className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-500 dark:text-slate-400 transition-colors"
+                        className="p-1 hover:bg-[#e7d8af] dark:hover:bg-slate-700 rounded text-[#402000] dark:text-slate-400 transition-colors"
                         title="+0.05"
                     >
                         <Plus size={14} />
@@ -93,8 +112,8 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                 className={`
                     flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-all
                     ${isAdvancedOpen 
-                        ? 'bg-brand-50 border-brand-200 text-brand-700 dark:bg-brand-900/20 dark:border-brand-800 dark:text-brand-400' 
-                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 shadow-sm'}
+                        ? 'bg-[#e7d8af] border-[#7d510f] text-[#402000] dark:bg-brand-900/20 dark:border-brand-800 dark:text-brand-400' 
+                        : 'bg-[#fff5da] border-[#c1a264] text-[#603000] hover:border-[#7d510f] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 shadow-sm'}
                 `}
             >
                 Więcej opcji
@@ -104,11 +123,11 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
 
         {/* Right Side: Capacity Highlight */}
         <div className="flex items-center justify-end">
-            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 px-5 py-2 rounded-xl flex flex-col items-end shadow-sm">
-                 <div className="text-[10px] font-bold text-amber-600/80 dark:text-amber-500/80 uppercase tracking-wider mb-0.5">
+            <div className="bg-[#fff5da] dark:bg-amber-900/10 border border-[#c1a264] dark:border-amber-800/50 px-5 py-2 rounded-xl flex flex-col items-end shadow-sm">
+                 <div className="text-[10px] font-bold text-[#603000]/80 dark:text-amber-500/80 uppercase tracking-wider mb-0.5">
                     Łączna pojemność
                  </div>
-                 <div className="text-2xl font-black text-amber-600 dark:text-amber-500 leading-none tabular-nums">
+                 <div className="text-2xl font-black text-[#402000] dark:text-amber-500 leading-none tabular-nums">
                     {totalCapacity.toLocaleString()}
                  </div>
             </div>
@@ -118,46 +137,46 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
       <div className="p-5">
         {/* Advanced Settings Drawer */}
         {isAdvancedOpen && (
-            <div className="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-4 border border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in mb-6 shadow-inner">
+            <div className="bg-[#e7d8af]/30 dark:bg-slate-800/40 rounded-xl p-4 border border-[#c1a264] dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in mb-6 shadow-inner">
                 <div>
-                    <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Czas Bazowy (s)</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Czas Bazowy (s)</label>
                     <input
                         type="number"
                         name="baseTime"
                         value={inputs.baseTime}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all dark:text-white"
+                        className="w-full px-3 py-2 text-sm bg-[#fff5da] dark:bg-slate-900 border border-[#c1a264] dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#7d510f]/20 dark:focus:ring-brand-500/20 focus:border-[#7d510f] dark:focus:border-brand-500 outline-none transition-all text-[#402000] dark:text-white"
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Max Czas (h)</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Max Czas (h)</label>
                     <input
                         type="number"
                         name="maxTimeAway"
                         value={inputs.maxTimeAway}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all dark:text-white"
+                        className="w-full px-3 py-2 text-sm bg-[#fff5da] dark:bg-slate-900 border border-[#c1a264] dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#7d510f]/20 dark:focus:ring-brand-500/20 focus:border-[#7d510f] dark:focus:border-brand-500 outline-none transition-all text-[#402000] dark:text-white"
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Mnożnik</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Mnożnik</label>
                     <input
                         type="number"
                         name="multiplier"
                         value={inputs.multiplier}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all dark:text-white"
+                        className="w-full px-3 py-2 text-sm bg-[#fff5da] dark:bg-slate-900 border border-[#c1a264] dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#7d510f]/20 dark:focus:ring-brand-500/20 focus:border-[#7d510f] dark:focus:border-brand-500 outline-none transition-all text-[#402000] dark:text-white"
                     />
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Wykładnik</label>
+                    <label className="block text-xs font-medium text-[#603000] dark:text-slate-400 mb-1.5">Wykładnik</label>
                     <input
                         type="number"
                         name="exponent"
                         value={inputs.exponent}
                         onChange={handleInputChange}
                         step="0.01"
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all dark:text-white"
+                        className="w-full px-3 py-2 text-sm bg-[#fff5da] dark:bg-slate-900 border border-[#c1a264] dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#7d510f]/20 dark:focus:ring-brand-500/20 focus:border-[#7d510f] dark:focus:border-brand-500 outline-none transition-all text-[#402000] dark:text-white"
                     />
                 </div>
             </div>
@@ -165,7 +184,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
 
         {/* BOTTOM: 1:1 Replica of TW Unit Input Table */}
         <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider pl-1">
+            <h3 className="text-xs font-bold text-[#603000] dark:text-slate-500 uppercase tracking-wider pl-1">
                 Wybierz Wojska
             </h3>
             
@@ -179,13 +198,19 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                                 <td key={unit.id} className="text-center p-1 align-bottom min-w-[60px]">
                                     <div className="flex flex-col items-center justify-end h-full pb-2">
                                         {/* ENHANCED ICON VISIBILITY */}
-                                        <div className="w-14 h-14 flex items-center justify-center rounded-full bg-white dark:bg-slate-200 border-2 border-[#c6b078] dark:border-slate-400 shadow-md transition-all hover:scale-105 duration-200 group relative">
-                                            
+                                        <div 
+                                          className="w-14 h-14 flex items-center justify-center rounded-full bg-white dark:bg-slate-200 border-2 border-[#c6b078] dark:border-slate-400 shadow-md transition-all hover:scale-105 duration-200 group relative cursor-help"
+                                          onMouseEnter={(e) => {
+                                            setHoveredUnit(unit);
+                                            setMousePos({ x: e.clientX, y: e.clientY });
+                                          }}
+                                          onMouseLeave={() => setHoveredUnit(null)}
+                                        >
                                             <img 
                                                 src={unit.image} 
                                                 alt={unit.name} 
-                                                title={`${unit.name} (Pojemność: ${unit.capacity})`}
-                                                className="w-10 h-10 object-contain cursor-help transform transition-transform duration-200"
+                                                // Removed title attribute to prevent native tooltip overlapping custom one
+                                                className="w-10 h-10 object-contain transform transition-transform duration-200"
                                                 style={{ imageRendering: 'auto' }}
                                             />
                                         </div>
@@ -230,7 +255,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                     </tbody>
                 </table>
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-right italic">
+            <p className="text-[10px] text-[#603000]/60 dark:text-slate-500 text-right italic">
                 *Interfejs stylizowany na oryginalny wygląd gry Plemiona
             </p>
         </div>

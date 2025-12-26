@@ -24,11 +24,25 @@ export interface CalculationResult {
 
 export type UnitType = 'spear' | 'sword' | 'axe' | 'archer' | 'spy' | 'light' | 'marcher' | 'heavy' | 'knight';
 
+export interface UnitStats {
+  wood: number;
+  clay: number;
+  iron: number;
+  pop: number;
+  speed: number; // minutes per field
+  attack: number;
+  defense: number;
+  defenseCav: number;
+  defenseArcher: number;
+}
+
 export interface UnitDefinition {
   id: UnitType;
   name: string;
   capacity: number;
   image: string;
+  description: string;
+  stats: UnitStats;
 }
 
 export interface CalculatorInputs {
