@@ -5,6 +5,7 @@ type TranslationKeys = {
   header: {
     subtitle: string;
     guideButton: string;
+    visits: string;
   };
   auth: {
     title: string;
@@ -198,7 +199,8 @@ export const translations: Record<'pl' | 'en', TranslationKeys> = {
   pl: {
     header: {
       subtitle: 'Zaawansowany Kalkulator',
-      guideButton: 'Kompendium wiedzy'
+      guideButton: 'Kompendium wiedzy',
+      visits: 'Wizyt'
     },
     auth: {
       title: 'Strefa Zabezpieczona',
@@ -406,7 +408,8 @@ export const translations: Record<'pl' | 'en', TranslationKeys> = {
   en: {
     header: {
       subtitle: 'Advanced Calculator',
-      guideButton: 'Knowledge Base'
+      guideButton: 'Knowledge Base',
+      visits: 'Visits'
     },
     auth: {
       title: 'Protected Zone',
@@ -503,7 +506,7 @@ export const translations: Record<'pl' | 'en', TranslationKeys> = {
       example1Strategy: 'Use "Normal Mode". Send everything to the level that takes about 45-50 minutes (usually SS or RR with low troops) to maximize profit/h.',
       example2Title: 'Scenario 2: Night Mode (Sleep)',
       example2Desc: 'You have 5000 Spears. You are going to sleep for 8 hours.',
-      example2Strategy: 'Use "Split Mode". If you send all to RR, they return in e.g. 4h and sit idle. Split Mode ensures all 4 levels return exactly after 8h, yielding significantly more total resources.',
+      example2Strategy: 'Use "Split Mode". If you send all to RR, they return in e.g. 4h and sit idle. Split Mode ensures all 4 levels return exactly after 8 hours, bringing in significantly more total resources than a single long RR run.',
       example3Title: 'Scenario 3: Offensive Army',
       example3Desc: 'You have a full farm of Axemen (20,000). You want resources.',
       example3Strategy: 'With such a large army, durations are huge (>24h). If you need resources "now", send only a small part (e.g., 2000 axes) for a quick cycle, keeping the rest ready for battle. Sending the whole offense scavenging is time-inefficient.',
