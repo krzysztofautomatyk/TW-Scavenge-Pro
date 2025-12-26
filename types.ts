@@ -20,6 +20,9 @@ export interface CalculationResult {
   runsWithinMaxTime: number;
   totalDurationFormatted: string;
   lootWithinMaxTime: number;
+  // Metadata
+  isEnabled: boolean; 
+  unitBreakdown: Record<UnitType, number>; // Specific unit counts for this level
 }
 
 export type UnitType = 'spear' | 'sword' | 'axe' | 'archer' | 'spy' | 'light' | 'marcher' | 'heavy' | 'knight';
@@ -45,11 +48,15 @@ export interface UnitDefinition {
   stats: UnitStats;
 }
 
+export type CalculationMode = 'normal' | 'split';
+
 export interface CalculatorInputs {
   worldSpeed: number;
   baseTime: number; // seconds
   maxTimeAway: number; // hours
   multiplier: number;
   exponent: number;
+  calculationMode: CalculationMode;
+  enabledLevels: number[]; // Array of Level IDs (1-4) enabled for split calculation
   army: Record<UnitType, number>; // Counts for each unit type
 }

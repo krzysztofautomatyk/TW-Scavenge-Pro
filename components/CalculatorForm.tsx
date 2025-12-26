@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CalculatorInputs, UnitType, UnitDefinition } from '../types';
+import { CalculatorInputs, UnitType, UnitDefinition, CalculationMode } from '../types';
 import { UNITS } from '../utils/unitData';
-import { calculateTotalCapacity, calculateTotalUnits } from '../utils/scavengeMath';
-import { Settings, ChevronDown, ChevronUp, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { calculateTotalCapacity, calculateTotalUnits, SCAVENGE_LEVELS } from '../utils/scavengeMath';
+import { Settings, ChevronDown, ChevronUp, Minus, Plus, ShoppingBag, PieChart, Check } from 'lucide-react';
 import UnitTooltip from './UnitTooltip';
 
 interface Props {
@@ -23,6 +23,14 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
     }));
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setInputs(prev => ({
+      ...prev,
+      [name]: value as CalculationMode
+    }));
+  };
+
   const adjustSpeed = (delta: number) => {
     setInputs(prev => ({
       ...prev,
@@ -39,6 +47,20 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
         [unitId]: Math.max(0, numValue)
       }
     }));
+  };
+
+  const toggleLevel = (levelId: number) => {
+    setInputs(prev => {
+        const current = prev.enabledLevels;
+        const exists = current.includes(levelId);
+        let newLevels;
+        if (exists) {
+            newLevels = current.filter(id => id !== levelId);
+        } else {
+            newLevels = [...current, levelId].sort();
+        }
+        return { ...prev, enabledLevels: newLevels };
+    });
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -106,6 +128,25 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                 </div>
             </div>
 
+            {/* Calculation Mode Selector */}
+            <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#603000] dark:text-slate-400 uppercase hidden lg:inline">
+                    Kalkulacja
+                </span>
+                <div className="relative">
+                    <select
+                        name="calculationMode"
+                        value={inputs.calculationMode}
+                        onChange={handleSelectChange}
+                        className="appearance-none pl-3 pr-8 py-1.5 text-xs font-bold bg-[#fff5da] dark:bg-slate-800 border border-[#c1a264] dark:border-slate-700 rounded-lg text-[#402000] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#7d510f] dark:focus:ring-brand-500 cursor-pointer shadow-sm"
+                    >
+                        <option value="normal">Normal Mode</option>
+                        <option value="split">Split Mode</option>
+                    </select>
+                    <ChevronDown size={12} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#603000] dark:text-slate-400 pointer-events-none" />
+                </div>
+            </div>
+
              {/* Advanced Toggle */}
              <button 
                 onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
@@ -116,7 +157,7 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                         : 'bg-[#fff5da] border-[#c1a264] text-[#603000] hover:border-[#7d510f] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 shadow-sm'}
                 `}
             >
-                Więcej opcji
+                Więcej
                 {isAdvancedOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
         </div>
@@ -270,6 +311,62 @@ const CalculatorForm: React.FC<Props> = ({ inputs, setInputs }) => {
                     </tbody>
                 </table>
             </div>
+
+            {/* SPLIT MODE LEVEL SELECTION */}
+            {inputs.calculationMode === 'split' && (
+                <div className="mt-3 bg-[#e7d8af] dark:bg-slate-800/60 p-4 rounded-lg border border-[#c1a264] dark:border-slate-700 animate-fade-in shadow-inner">
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#c1a264]/50 dark:border-slate-700/50">
+                        <PieChart size={16} className="text-[#7d510f] dark:text-brand-400"/>
+                        <span className="text-xs font-bold text-[#603000] dark:text-slate-300 uppercase tracking-wide">Dystrybucja Wojsk</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {SCAVENGE_LEVELS.map(level => {
+                            const isChecked = inputs.enabledLevels.includes(level.id);
+                            return (
+                            <label 
+                                key={level.id} 
+                                className={`
+                                    relative flex flex-col items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all duration-200
+                                    ${isChecked 
+                                        ? 'bg-[#fff5da] border-[#7d510f] dark:bg-slate-700/50 dark:border-brand-500 shadow-sm' 
+                                        : 'bg-transparent border-[#c1a264]/50 dark:border-slate-700 text-[#603000]/60 dark:text-slate-500 hover:bg-[#fff5da]/50 dark:hover:bg-slate-800'}
+                                `}
+                                title={level.name} // Full Polish name toolip
+                            >
+                                <input 
+                                    type="checkbox" 
+                                    checked={isChecked}
+                                    onChange={() => toggleLevel(level.id)}
+                                    className="absolute opacity-0 w-0 h-0"
+                                />
+                                
+                                {isChecked && (
+                                    <div className="absolute top-1.5 right-1.5">
+                                        <div className="bg-[#7d510f] dark:bg-brand-500 rounded-full p-0.5">
+                                            <Check size={8} className="text-white" strokeWidth={3} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <span className={`text-lg font-black ${isChecked ? 'text-[#301c06] dark:text-white' : 'inherit'}`}>
+                                    {level.code}
+                                </span>
+                                <span className={`text-xs font-bold ${isChecked ? 'text-[#7d510f] dark:text-brand-400' : 'inherit'}`}>
+                                    {Math.round(level.ratio * 100)}%
+                                </span>
+                                <span className="text-[9px] mt-1 opacity-70 truncate max-w-full">
+                                    {level.name}
+                                </span>
+                            </label>
+                        )})}
+                    </div>
+                    <p className="text-[10px] mt-3 text-[#603000] dark:text-slate-400 italic bg-[#fff5da] dark:bg-slate-900/50 p-2 rounded border border-[#c1a264]/30 dark:border-slate-700/50">
+                        <span className="font-bold">Strategia Czasowa:</span> Wojska zostaną podzielone tak, aby czas trwania wypraw na wszystkich zaznaczonych poziomach był <strong>zbliżony</strong> (proporcjonalnie do trudności poziomu).
+                    </p>
+                </div>
+            )}
+
             <p className="text-[10px] text-[#603000]/60 dark:text-slate-500 text-right italic">
                 *Interfejs stylizowany na oryginalny wygląd gry Plemiona
             </p>

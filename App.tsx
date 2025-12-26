@@ -8,19 +8,31 @@ import DetailedTable from './components/DetailedTable';
 import LevelCards from './components/LevelCards';
 import InfoSection from './components/InfoSection';
 import ThemeToggle from './components/ThemeToggle';
-import { LayoutDashboard } from 'lucide-react';
+import CalculationGuidePage from './components/CalculationGuidePage';
+import { LayoutDashboard, Info } from 'lucide-react';
+
+type ViewState = 'calculator' | 'guide';
 
 const App: React.FC = () => {
+  const [currentView, setCurrentView] = useState<ViewState>('calculator');
+
   const [inputs, setInputs] = useState<CalculatorInputs>({
     worldSpeed: 1.25,
     baseTime: 1800,
     maxTimeAway: 24,
     multiplier: 100,
     exponent: 0.45,
+    calculationMode: 'normal',
+    enabledLevels: [1, 2, 3, 4], // Default all enabled
     army: { ...INITIAL_ARMY, axe: 10000 } // Default 10000 axes
   });
 
   const results = useMemo(() => calculateScavengeResults(inputs), [inputs]);
+
+  // Conditional Rendering for Views
+  if (currentView === 'guide') {
+    return <CalculationGuidePage onBack={() => setCurrentView('calculator')} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#d2c09e] dark:bg-slate-950 transition-colors duration-300 pb-20 font-sans">
@@ -37,18 +49,31 @@ const App: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
              <div className="hidden sm:block text-xs font-mono font-bold text-[#603000] dark:text-slate-500 bg-[#e7d8af] dark:bg-slate-800 px-3 py-1.5 rounded-md border border-[#7d510f]/30 dark:border-slate-700 shadow-sm">
               v1.2.0
             </div>
             <div className="h-6 w-px bg-[#7d510f]/30 dark:bg-slate-700 hidden sm:block"></div>
+            
+            {/* Info Button - Switches to Guide Page */}
+            <button
+              onClick={() => setCurrentView('guide')}
+              className="p-2 rounded-lg shadow-sm
+                         bg-[#e7d8af] text-[#603000] border border-[#7d510f]/30 hover:bg-[#dec893] hover:text-[#402000]
+                         dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200
+                         transition-colors focus:outline-none focus:ring-2 focus:ring-[#7d510f] dark:focus:ring-brand-500"
+              title="Kompendium wiedzy"
+            >
+              <Info size={20} />
+            </button>
+
             <ThemeToggle />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
         
         {/* 1. Configuration (Full Width) */}
         <div className="w-full">
@@ -62,7 +87,7 @@ const App: React.FC = () => {
 
         {/* 3. Detailed Table (Full Width) */}
         <div className="w-full">
-            <DetailedTable results={results} maxTimeAway={inputs.maxTimeAway} />
+            <DetailedTable results={results} maxTimeAway={inputs.maxTimeAway} calculationMode={inputs.calculationMode} />
         </div>
         
         {/* 4. Info Section (Full Width) */}

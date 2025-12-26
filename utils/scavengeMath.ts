@@ -27,49 +27,98 @@ export function calculateTotalUnits(army: Record<UnitType, number>): number {
 }
 
 export function calculateScavengeResults(inputs: CalculatorInputs): CalculationResult[] {
-  const { worldSpeed, baseTime, multiplier, exponent, army, maxTimeAway } = inputs;
+  const { worldSpeed, baseTime, multiplier, exponent, army, maxTimeAway, calculationMode, enabledLevels } = inputs;
   
-  const totalCapacity = calculateTotalCapacity(army);
-  const totalUnits = calculateTotalUnits(army);
+  const totalCapacityRaw = calculateTotalCapacity(army);
+  const totalUnitsRaw = calculateTotalUnits(army);
   const durationFactor = Math.pow(worldSpeed, -0.55);
   const maxTimeSeconds = maxTimeAway * 3600;
+  const isSplitMode = calculationMode === 'split';
+
+  // --- EQUAL DURATION LOGIC ---
+  // To equalize time, capacity assigned to a level must be inversely proportional to its Ratio.
+  // Weight = 1 / Ratio.
+  // Formula approx: Time ~ (Capacity * Ratio)^... 
+  // If (C1 * R1) = (C2 * R2), then times are roughly equal.
+  
+  let totalInverseWeight = 0;
+  if (isSplitMode) {
+      enabledLevels.forEach(id => {
+          const lvl = SCAVENGE_LEVELS.find(l => l.id === id);
+          if (lvl) {
+              totalInverseWeight += (1 / lvl.ratio);
+          }
+      });
+  }
 
   return SCAVENGE_LEVELS.map(level => {
+    const isEnabled = isSplitMode ? enabledLevels.includes(level.id) : true;
+    
+    // Determine share percentage for this level
+    let share = 0;
+
+    if (isSplitMode) {
+        if (isEnabled && totalInverseWeight > 0) {
+            const weight = 1 / level.ratio;
+            share = weight / totalInverseWeight;
+        } else {
+            share = 0;
+        }
+    } else {
+        // Normal mode: 100% of troops are calculated for each level options
+        share = 1;
+    }
+
+    // Calculate capacity and units for this level
+    const currentLevelCapacity = totalCapacityRaw * share;
+    const currentLevelUnits = totalUnitsRaw * share;
+
+    // Calculate specific unit breakdown
+    const unitBreakdown: Record<UnitType, number> = {} as Record<UnitType, number>;
+    UNITS.forEach(u => {
+        unitBreakdown[u.id] = Math.floor((army[u.id] || 0) * share);
+    });
+
+    // --- DURATION CALCULATION ---
     // Formula: ( (capacity * capacity * multiplier * ratio * ratio)^exponent + baseTime ) * durationFactor
     
-    // Logic matches Tribal Wars forum formulas
-    const baseTerm = (totalCapacity * totalCapacity) * multiplier * (level.ratio * level.ratio);
-    const powerTerm = Math.pow(baseTerm, exponent);
-    const durationSeconds = (powerTerm + baseTime) * durationFactor;
+    let durationSeconds = 0;
+    let loot = 0;
+
+    if (currentLevelCapacity > 0) {
+        const baseTerm = (currentLevelCapacity * currentLevelCapacity) * multiplier * (level.ratio * level.ratio);
+        const powerTerm = Math.pow(baseTerm, exponent);
+        durationSeconds = (powerTerm + baseTime) * durationFactor;
+        loot = Math.round(currentLevelCapacity * level.ratio);
+    }
     
-    const loot = Math.round(totalCapacity * level.ratio);
-    
-    // Avoid division by zero
+    // Avoid division by zero for rates
     const effectiveDuration = Math.max(1, durationSeconds);
     
-    const runsPerDay = Math.floor(86400 / effectiveDuration);
-    const lootPerHour = (loot / effectiveDuration) * 3600;
+    const runsPerDay = durationSeconds > 0 ? Math.floor(86400 / effectiveDuration) : 0;
+    const lootPerHour = durationSeconds > 0 ? (loot / effectiveDuration) * 3600 : 0;
     const resourcesPer24h = loot * runsPerDay;
 
     // Calculate specifically for the user-defined Max Time
-    const runsWithinMaxTime = Math.floor(maxTimeSeconds / effectiveDuration);
+    const runsWithinMaxTime = durationSeconds > 0 ? Math.floor(maxTimeSeconds / effectiveDuration) : 0;
     const lootWithinMaxTime = loot * runsWithinMaxTime;
     const totalDurationSeconds = runsWithinMaxTime * effectiveDuration;
 
     return {
       level,
-      units: totalUnits,
-      capacity: Math.round(totalCapacity),
+      units: Math.round(currentLevelUnits),
+      capacity: Math.round(currentLevelCapacity),
       loot,
       durationSeconds,
       durationFormatted: formatTime(durationSeconds),
       runsPerDay,
       lootPerHour,
       resourcesPer24h,
-      // New dynamic fields
       runsWithinMaxTime,
       lootWithinMaxTime,
-      totalDurationFormatted: formatTime(totalDurationSeconds)
+      totalDurationFormatted: formatTime(totalDurationSeconds),
+      isEnabled,
+      unitBreakdown
     };
   });
 }
